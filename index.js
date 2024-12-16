@@ -1,6 +1,5 @@
 const express= require('express');
 const app=express();
-const PORT=4000;
 const mongoose=require('mongoose');
 const dotEnv=require('dotenv');
 const bodyParser=require('body-parser');
@@ -11,6 +10,7 @@ const cors=require('cors');
 const path =require('path');
 dotEnv.config();
 app.use(cors());
+const PORT=process.env.PORT||4000;
 mongoose.connect(process.env.MONGO_URI).then(()=>
 {
     console.log("mongodb connected successfully");
@@ -27,7 +27,7 @@ app.use('/uploads',express.static('uploads'));
 app.listen(PORT,()=>{
     console.log(`server started at port ${PORT}`);
 })
-app.use('/home',(req,res)=>
+app.use('/',(req,res)=>
 {
     res.send("<h1>welcome to swiggy</h1>")
 })
