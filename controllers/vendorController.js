@@ -65,28 +65,27 @@ const getAllVendors=async(req,res)=>
                   res.status(500).json({error:"internal server error"});
     }
 }
-const getVendorById=async(req,res)=>
-{
-    const vendorId=req.params.vendorId;
-    try
-    {
-       const vendor=await Vendor.findById(vendorId).populate('firm');
-       if(!vendor)
-       {
-        res.status(401).json({message:"vendor not found"});
-       }
-       if(vendor.firm[0])
-       {
-       const vendorFirmId=vendor.firm[0]._id;
-       console.log(vendor,vendorFirmId);
-       res.status(200).json({vendor,vendorFirmId});
-       }
-       res.status(200).json({vendor});
+const getVendorById = async (req, res) => {
+    const vendorId = req.params.vendorId;
+
+    try {
+        const vendor = await Vendor.findById(vendorId).populate('firm');
+        
+        if (!vendor) {
+            return res.status(404).json({ message: "Vendor not found" }); // Ensure response ends here
+        }
+
+        if (vendor.firm[0]) {
+            const vendorFirmId = vendor.firm[0]._id;
+            console.log(vendor, vendorFirmId);
+            return res.status(200).json({ vendor, vendorFirmId }); // Ensure response ends here
+        }
+
+        // If no firm exists, send only vendor details
+        return res.status(200).json({ vendor });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal server error" }); // Ensure response ends here
     }
-    catch(error)
-    {
-        console.log(error);
-        res.status(500).json({error:"internal server error"});
-    }
-}
+};
 module.exports={vendorRegister,vendorLogin,getAllVendors,getVendorById}
