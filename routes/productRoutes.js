@@ -9,5 +9,5 @@ router.get('/uploads/:imageName',(req,res)=>{
     res.headersSent('content-Type','image/jpeg');
     res.sendFile(Path2D.join(__dirname,'..','uploads',imageName))
 });
-router.delete('/:productId',productController.deleteProductById);
+router.delete('/delete/:productId',productController.deleteProductById);
 module.exports=router;

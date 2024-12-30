@@ -27,7 +27,7 @@ const storage = multer.diskStorage(
             return res.status(401).json({error:"firm not found"});
           }
           const product =new Product({
-            productName,price,category,bestSeller,description,firm:firm._id
+            productName,price,category,image,bestSeller,description,firm:firm._id
           })
           const savedProduct =await product.save();
           firm.product.push(savedProduct);
@@ -63,12 +63,15 @@ const storage = multer.diskStorage(
   {
     try
     {
-         const productId=req.params.id;
-         const deletedProduct=await Product.findById(productId);
+         const productId=req.params.productId;
+         console.log(productId);
+         const deletedProduct=await Product.findByIdAndDelete(productId);
+         console.log(deletedProduct);
          if(!deletedProduct)
          {
           return res.status(404).json({error:"no product found"});
          }
+         return res.status(200).json({message:"product found and deleted"});
     }
     catch(error)
     {

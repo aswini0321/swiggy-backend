@@ -11,13 +11,24 @@ const path =require('path');
 dotEnv.config();
 app.use(cors());
 const PORT=process.env.PORT||4000;
-mongoose.connect(process.env.MONGO_URI).then(()=>
-{
-    console.log("mongodb connected successfully");
-}).catch((error)=>
-{
-    console.log(error);
-})
+const connectToDatabase = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 30000, // Increase timeout for server selection
+      socketTimeoutMS: 45000,         // Increase socket timeout
+    });
+    console.log("MongoDB connected successfully");
+  } catch (error) {
+    console.error("Failed to connect to MongoDB:", error.message);
+    process.exit(1); // Exit the process if the connection fails
+  }
+};
+
+// Call the connection function
+connectToDatabase();
+
 app.use(bodyParser.json());
 app.use('/vendor',vendorRoutes);
 app.use('/firm',firmRoutes);
